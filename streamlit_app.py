@@ -1,7 +1,12 @@
 import streamlit as st
+import pickle
+import numpy as np
+import os
 
-st.title("🎈 Bankruptcy Project")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
-st.select_slider("Pick a size", ["S", "M", "L"])
+# Load trained model
+model_path = "random_forest_model.pkl"  # Update with your model path/name 
+if not os.path.exists(model_path):
+    st.error("Model file not found. Please check the file path.")
+    st.stop()
+
+ 
