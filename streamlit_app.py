@@ -13,7 +13,7 @@ from xgboost import XGBClassifier
 
 # Load dataset 
 def load_dataset():
-    data = pd.read_csv("C:/Users/Asus/Desktop/ML_Project/data/Bankruptcy_prevention.csv", delimiter=";")
+    data = pd.read_csv("C:/Users/Asus/Desktop/ML_Project/data/Bankruptcy1_prevention.csv", delimiter=";")
     print(data.head())
     # Strip column names (removes any extra spaces)
     data.columns = data.columns.str.strip()
