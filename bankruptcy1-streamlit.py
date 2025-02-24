@@ -1,41 +1,79 @@
 import streamlit as st
-import pickle
+import pandas as pd
 import numpy as np
+import pickle
 import os
 
-# Load trained model
-model_path = "random_forest_model.pkl"  # Update with your model path/name 
-if not os.path.exists(model_path):
-    st.error("Model file not found. Please check the file path.")
-    st.stop()
+ 
 
-try:
-    with open(model_path, "rb") as file:
-        model = pickle.load(file)
-    st.write(f"Model loaded successfully: {type(model)}")  # Debugging output
-except Exception as e:
-    st.error(f"Error loading model: {e}")
-    st.stop()
 
-# Streamlit UI
-st.title("Bankruptcy Prediction App")
-st.write("Enter the required details to predict BANKRUPTCY.")
+#load the saved models &preprocessing objects
+def load_pickle(filename):
+    path = os.path.join("C:/Users/Asus/Desktop/ML_Project/model/",filename)
+    with open(path, "rb") as file:
+       return pickle.load(file)
 
-# Input fields for features
-financial_flexibility = st.number_input("Financial Flexibility", min_value=0.0, max_value=1.0, step=0.5)
-credibility = st.number_input("Credibility", min_value=0.0, max_value=1.0, step=0.5)
-competitiveness = st.number_input("Competitiveness", min_value=0.0, max_value=1.0, step=0.5)
+rf_model = load_pickle("rf_model.pkl")
+xgb_model = load_pickle("xgb_model.pkl")
+scaler = load_pickle("scaler.pkl")
+smote = load_pickle("smote.pkl")
+#encoder = load_pickle("encoder.pkl")
 
-# Predict function
-def predict_bankruptcy():
-    features = np.array([[financial_flexibility, credibility, competitiveness]], dtype=np.float64)
-    try:
-        prediction = model.predict(features)
-        return "The Company may most probably go Bankrupt" if prediction[0] == 0 else "The Company may Not go Bankrupt"
-    except Exception as e:
-        st.error(f"Prediction error: {e}")
-        return "Error in prediction"
+#App Title
+st.title("💰 Bankruptcy Prediction App")
+st.markdown("Enter company risk factors to predict bankruptcy risk.")
 
-if st.button("Predict"):
-    result = predict_bankruptcy()
-    st.write(f"### Prediction: {result}")
+# Sidebar for user inputs
+st.sidebar.header("Enter Risk Factor Values")
+
+def user_inputs():
+    industrial_risk = st.sidebar.selectbox("Industrial Risk", [0, 1])
+    management_risk = st.sidebar.selectbox("Management Risk", [0, 1])
+    financial_flexibility = st.sidebar.selectbox("Financial Flexibility", [0, 1])
+    credibility = st.sidebar.selectbox("Credibility", [0, 1])
+    competitiveness = st.sidebar.selectbox("Competitiveness", [0, 1])
+    operating_risk = st.sidebar.selectbox("Operating Risk", [0, 1])
+
+    return pd.DataFrame([[industrial_risk, management_risk, financial_flexibility, 
+                          credibility, competitiveness, operating_risk]],
+                        columns=["industrial_risk", "management_risk", 
+                                 "financial_flexibility", "credibility", 
+                                 "competitiveness", "operating_risk"])
+
+# Get user input
+user_data = user_inputs()
+
+# Display entered data
+st.subheader("Entered Data:")
+st.write(user_data)
+
+# Model selection
+model_choice = st.radio("Select a model for prediction:", ["Random Forest", "XGBoost"])
+
+# Predict on button click
+if st.button("Predict Bankruptcy Risk"):
+    #Encode input
+    #user_data_encoded = encoder.transform(user_data)
+
+    #Scale input data
+    user_data_scaled = scaler.transform(user_data)
+
+    #Select the model
+    if model_choice == "Random Forest":
+        prediction = rf_model.predict(user_data_scaled)[0]
+    else:
+        prediction = xgb_model.predict(user_data_scaled)[0]
+
+    # Display results
+    prediction_text = "❌ At Risk of Bankruptcy" if prediction == 1 else "✅ Not at Risk"
+    
+    st.subheader("📊 Prediction Result:")
+    st.write(f"**{model_choice}:** {prediction_text}")
+
+
+
+
+
+
+
+ 
