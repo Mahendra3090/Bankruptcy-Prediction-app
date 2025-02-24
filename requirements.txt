@@ -1,4 +1,3 @@
-! pip install imbalanced-learn
 streamlit
 pandas
 numpy
