@@ -1,4 +1,4 @@
-# 🎈 Blank app template
+# 🎈 Bankruptcy_prediction app
 
 A simple Streamlit app template for you to modify!
 
