@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from imblearn.over_sampling import SMOTE
+#from imblearn.over_sampling import SMOTE
 from xgboost import XGBClassifier
 
 # Load dataset 
@@ -43,12 +43,16 @@ def create_model(data):
     #X = np.hstack((X_numeric, X_encoded))
 
     # Handle class imbalance without using sample_weight in SMOTE
-    smote = SMOTE(random_state=42)
-    X_resampled, y_resampled = smote.fit_resample(X, y)
+    #smote = SMOTE(random_state=42)
+    #X_resampled, y_resampled = smote.fit_resample(X, y)
+
+    # Train-test split
+    #X_train, X_test, y_train, y_test = train_test_split(
+    #X_resampled, y_resampled, test_size=0.2, random_state=42)
 
     # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(
-    X_resampled, y_resampled, test_size=0.2, random_state=42)
+    X, y, test_size=0.2, random_state=42)
 
     # Feature scaling
     scaler = StandardScaler()
@@ -95,8 +99,8 @@ def main():
     #with open('model/encoder.pkl', 'wb') as f:
     #    pickle.dump(encoder,f)
     
-    with open('model/smote.pkl', 'wb') as f:
-        pickle.dump(smote,f)
+    #with open('model/smote.pkl', 'wb') as f:
+    #    pickle.dump(smote,f)
 
     with open('model/scaler.pkl','wb') as f:
         pickle.dump(scaler,f)
