@@ -4,6 +4,6 @@ numpy
 matplotlib
 seaborn
 scikit-learn
-imbalanced-learn==0.11.0
+imbalanced-learn 
 xgboost
 subprocess
