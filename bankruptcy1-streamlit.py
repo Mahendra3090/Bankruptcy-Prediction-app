@@ -16,7 +16,7 @@ def load_pickle(filename):
 rf_model = load_pickle("rf_model.pkl")
 xgb_model = load_pickle("xgb_model.pkl")
 scaler = load_pickle("scaler.pkl")
-smote = load_pickle("smote.pkl")
+#smote = load_pickle("smote.pkl")
 #encoder = load_pickle("encoder.pkl")
 
 #App Title
